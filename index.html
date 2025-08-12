@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+
+<script charset="utf-8">
+
+  // Variable Declarations
+  var highscore = 0;
+  var score = 0;
+  var inputIsHex = true;
+
+  var r = 255;
+  var g = 255;
+  var b = 255;
+
+  var colorInputRGB = "";
+  var colorInputHex = "";
+  // Onload
+  function onLoad(){
+    document.getElementById('color-sample').style.backgroundColor = `rgb(${r},${g},${b})`
+
+    colorInputHex = document.getElementById('color-input-hex');
+    colorInputRGB = document.getElementById('color-input-rgb-b');
+
+    colorInputHex.addEventListener("keydown", function (e){
+        if (e.code === "Enter"){  // checks whether the pressed key is "Enter"
+            handleColorInput(e);
+        }
+    });
+
+  }
+  // Handle Colour Input
+  function handleColorInput(e){
+   let userDecRed   = ""
+   let userDecGreen = ""
+   let userDecBlue  = ""
+
+   if(inputIsHex){
+      userInput = document.getElementById('color-input-hex').value;
+
+      console.log("user entered " + userInput);
+
+      let userHexRed   = userInput.substring(0,2);
+      let userHexGreen = userInput.substring(2,4);
+      let userHexBlue  = userInput.substring(4,6);
+
+      userDecRed   = Number(`0x${userHexRed}`);
+      userDecGreen = Number(`0x${userHexGreen}`);
+      userDecBlue  = Number(`0x${userHexBlue}`);
+    }else{
+      userDecRed   = Number(document.getElementById('color-input-rgb-r').value);
+      userDecGreen = Number(document.getElementById('color-input-rgb-g').value);
+      userDecBlue  = Number(document.getElementById('color-input-rgb-b').value);
+    }
+
+
+    console.log(userDecRed);
+    console.log(userDecGreen);
+    console.log(userDecBlue);
+
+    let redDiff = Math.abs(r - userDecRed);
+    let greenDiff = Math.abs(g - userDecGreen);
+    let blueDiff = Math.abs(b - userDecBlue);
+
+    let meanDiff = (redDiff + greenDiff + blueDiff)/3;
+
+    console.log(`target: ${r} ${g} ${b}`);
+    console.log(`yours: ${userDecRed} ${userDecGreen} ${userDecBlue}`);
+    console.log(`mean diff: ${meanDiff}`);
+
+    if(meanDiff <= 100){
+      document.getElementById('score-message').innerHTML = ["Wow!", "Nice one!", "Good job!", "Terrific!"][Math.floor(Math.random() * 5)];
+      score += 1
+    }else if(score > highscore){
+      highscore = score;
+      score = 0;
+      document.getElementById('score-message').innerHTML = "Oh no! :(";
+      document.getElementById('highscore').innerHTML = `Highscore: ${highscore}`;
+    }
+
+    document.getElementById('score').innerHTML = score;
+    newColor();
+  }
+
+  function newColor(){
+    r = Math.floor(Math.random() * 255);
+    g = Math.floor(Math.random() * 255);
+    b = Math.floor(Math.random() * 255);
+    document.getElementById('color-sample').style.backgroundColor = `rgb(${r},${g},${b})`;
+
+    if(inputIsHex){
+      document.getElementById('color-input-hex').value = "";
+    }else{
+      document.getElementById('color-input-rgb-r').value = "";
+      document.getElementById('color-input-rgb-g').value = "";
+      document.getElementById('color-input-rgb-b').value = "";
+
+      document.getElementById('color-input-rgb-r').focus();
+    }
+  }
+
+// Toggle Hex/RGB
+  function toggleInputHexRGB(){
+    inputIsHex = !inputIsHex;
+    if(inputIsHex){
+      document.getElementById('rgb-input').style.display = "none";
+      document.getElementById('hex-input').style.display = "";
+
+      colorInputHex.addEventListener("keydown", function (e){
+          if (e.code === "Enter"){  // checks whether the pressed key is "Enter"
+              handleColorInput(e);
+          }
+      });
+      colorInputRGB.removeEventListener("keydown", function (e){
+          if (e.code === "Enter"){
+              handleColorInput(e);
+          }
+      });
+    
+      document.getElementById('color-input-hex').focus();
+    }else{
+      document.getElementById('rgb-input').style.display = "";
+      document.getElementById('hex-input').style.display = "none";
+
+      colorInputHex.removeEventListener("keydown", function (e){
+          if (e.code === "Enter"){  // checks whether the pressed key is "Enter"
+              handleColorInput(e);
+          }
+      });
+      colorInputRGB.addEventListener("keydown", function (e){
+          if (e.code === "Enter"){  // checks whether the pressed key is "Enter"
+              handleColorInput(e);
+          }
+      });
+      document.getElementById('color-input-rgb-r').focus();
+    }
+  }
+</script>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Hex Guesser</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style.css">
+  </head>
+  <body onload="onLoad()">
+    <h1 class="title">Hex Guesser</h1>
+    <div id="color-sample" class="color-sample"></div>
+      <div class="color-input">
+        <div id="rgb-input" style="display: none;">
+          <label for="color-input-rgb-b">What is this color? (Enter red, green and blue values)</label><br>
+          <input tabindex="1" type="text" id="color-input-rgb-r" name="Color Input Red"><br>
+          <input type="text" id="color-input-rgb-g" name="Color Input Green"><br>
+          <input type="text" id="color-input-rgb-b" name="Color Input Blue"><br>
+        </div>
+      <div id="hex-input">
+        <label for="color-input-hex">What is this color? (Single hex value such as "ffffff")</label><br>
+        <input tabindex="1" type="text" id="color-input-hex" name="Color Input"><br>
+      </div>
+      <button onclick="toggleInputHexRGB()">Toggle Input</button>
+      <div id="score-message"></div>
+      <div id="score"></div>
+      <div id="highscore"></div>
+    </div>
+  </body>
+</html>
