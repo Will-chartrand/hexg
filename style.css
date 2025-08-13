@@ -1,8 +1,15 @@
+@font-face {
+  font-family: 'Droid Sans Mono';
+  src: url('./fonts/DroidSansMono.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 html {
 	background-color: #141414;
 	color: #F0F0F0;
   font-family: 'Droid Sans Mono';
-  height: 100%;
 }
 
 body {
@@ -10,12 +17,20 @@ body {
   max-width: 1000px;
   line-height: 1.6;
   font-size: 18px;
-  color: #ffffff;
+  color: #aaa;
   padding: 0 10px;
 }
 
 button {
   background-color: cyan;
+}
+
+input {
+	background-color: #141414;
+  border-style: double;
+  border-top: none;
+  border-right: none;
+  border-width: 2px;
 }
 
 .title {
@@ -36,10 +51,4 @@ button {
 
 .color-input {
   position: absolute;
-}
-
-#color-input {
-  background-color: #141414;
-  border-color: white;
-  color: white;
 }
